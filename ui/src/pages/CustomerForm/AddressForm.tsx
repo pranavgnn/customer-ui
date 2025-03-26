@@ -1,5 +1,7 @@
 import React from "react";
 import { CustomerFormData } from "../../types";
+import { Button, Select } from "../../components/ui";
+import countryCodes from "../../util/countryCodes";
 
 interface AddressFormProps {
   formData: CustomerFormData;
@@ -15,6 +17,17 @@ const AddressForm: React.FC<AddressFormProps> = ({
   previousStep,
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      address: {
+        ...prev.address,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -41,6 +54,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
       nextStep();
     }
   };
+
+  // Create country options from the countryCodes array
+  const countryOptions = countryCodes.map((country) => ({
+    value: country.name,
+    label: country.name,
+  }));
 
   return (
     <form onSubmit={handleSubmit}>
@@ -142,43 +161,27 @@ const AddressForm: React.FC<AddressFormProps> = ({
             />
           </div>
           <div>
-            <label
-              className="block text-sm font-medium text-neutral-700 mb-1"
-              htmlFor="country"
-            >
-              Country <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
+            <Select
               id="country"
               name="country"
+              label="Country"
+              options={countryOptions}
               value={formData.address.country}
-              onChange={handleInputChange}
-              className="input-field"
-              placeholder="USA"
-              required
+              onChange={handleSelectChange}
+              isRequired
+              fullWidth
             />
           </div>
         </div>
       </div>
 
       <div className="mt-8 pt-4 border-t border-neutral-200 flex justify-between">
-        <button
-          type="button"
-          onClick={previousStep}
-          className="text-neutral-600 hover:text-neutral-900 font-medium"
-        >
+        <Button variant="secondary" onClick={previousStep}>
           Back
-        </button>
-        <button
-          type="submit"
-          className={`btn-primary ${
-            !isValid() ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={!isValid()}
-        >
+        </Button>
+        <Button variant="primary" type="submit" disabled={!isValid()}>
           Continue
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -7,6 +7,7 @@ export interface CustomerName {
 export interface CustomerContactDetails {
   type: string;
   value: string;
+  dialCode?: string;
 }
 
 export interface CustomerAddress {

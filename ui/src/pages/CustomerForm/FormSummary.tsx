@@ -122,7 +122,10 @@ const FormSummary: React.FC<FormSummaryProps> = ({
                     {contact.type}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-sm text-neutral-800">
-                    {contact.value}
+                    {["Phone", "Mobile", "Work"].includes(contact.type) &&
+                    contact.dialCode
+                      ? `${contact.dialCode} ${contact.value}`
+                      : contact.value}
                   </td>
                 </tr>
               ))}

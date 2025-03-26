@@ -30,7 +30,7 @@ const CustomerFormContainer: React.FC = () => {
       country: "",
       zipCode: "",
     },
-    contactDetails: [{ type: "Email", value: "" }],
+    contactDetails: [{ type: "Email", value: "" }], // Email doesn't need dialCode by default
     identityProofs: [
       { type: "Passport", value: "", issuedDate: "", expiryDate: "" },
     ],

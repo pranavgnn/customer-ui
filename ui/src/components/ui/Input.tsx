@@ -14,6 +14,16 @@ interface InputProps extends InputPropsBase {
   fullWidth?: boolean;
   isRequired?: boolean;
   containerClassName?: string;
+  inputMode?:
+    | "none"
+    | "text"
+    | "tel"
+    | "url"
+    | "email"
+    | "numeric"
+    | "decimal"
+    | "search";
+  autoComplete?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -28,6 +38,8 @@ const Input: React.FC<InputProps> = ({
   containerClassName = "",
   className = "",
   id,
+  inputMode,
+  autoComplete,
   ...props
 }) => {
   // Generate a unique ID if one isn't provided
@@ -78,6 +90,8 @@ const Input: React.FC<InputProps> = ({
               ? `${inputId}-helper`
               : undefined
           }
+          inputMode={inputMode}
+          autoComplete={autoComplete}
           {...props}
         />
         {rightIcon && (

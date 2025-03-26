@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import Navbar from "./ui/Navbar";
-import { Home, Users, Plus } from "lucide-react"; // Import Lucide icons
+import { Home, Users, Plus } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
