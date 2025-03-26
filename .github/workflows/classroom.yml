@@ -1,0 +1,30 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: LAB5 and LAB6 TEST
+      id: lab5-and-lab6-test
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: LAB5 and LAB6 TEST
+        setup-command: mvn clean
+        command: mvn install
+        timeout: 10
+        max-score: 4
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        LAB5-AND-LAB6-TEST_RESULTS: "${{steps.lab5-and-lab6-test.outputs.result}}"
+      with:
+        runners: lab5-and-lab6-test
