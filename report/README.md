@@ -151,91 +151,91 @@ Comprehensive testing was performed to verify the functionality of all frontend 
 
 The application's landing page provides an overview of the system with navigation to key features.
 
-![Homepage](../screenshots/homepage.png)
+![Homepage](./screenshots/homepage.png)
 _Figure 1: Application homepage with navigation options and overview_
 
 ### 2. Customer List View
 
 The customer list view displays all registered customers with basic information and action buttons.
 
-![Customer List](../screenshots/customer_list.png)
+![Customer List](./screenshots/customer_list.png)
 _Figure 2: Customer listing page showing all customer records with action buttons_
 
 ### 3. Customer Creation Form - Personal Information
 
 The multi-step customer creation form starts with gathering personal information.
 
-![Customer Form - Personal Info](../screenshots/customer_form_personal.png)
+![Customer Form - Personal Info](./screenshots/customer_form_personal.png)
 _Figure 3: First step of customer creation form - Personal information entry_
 
 ### 4. Customer Creation Form - Contact Details
 
 The second step of the form collects contact information.
 
-![Customer Form - Contact Details](../screenshots/customer_form_contact.png)
+![Customer Form - Contact Details](./screenshots/customer_form_contact.png)
 _Figure 4: Second step of customer creation form - Contact details entry_
 
 ### 5. Customer Creation Form - Address Information
 
 This step captures the customer's address details.
 
-![Customer Form - Address](../screenshots/customer_form_address.png)
+![Customer Form - Address](./screenshots/customer_form_address.png)
 _Figure 5: Third step of customer creation form - Address information entry_
 
 ### 6. Customer Creation Form - Identity Proofs
 
 The final step collects identity document information.
 
-![Customer Form - Identity](../screenshots/customer_form_identity.png)
+![Customer Form - Identity](./screenshots/customer_form_identity.png)
 _Figure 6: Fourth step of customer creation form - Identity proof information entry_
 
 ### 7. Customer Details View
 
 The details view shows comprehensive information about a specific customer.
 
-![Customer Details](../screenshots/customer_details.png)
+![Customer Details](./screenshots/customer_details.png)
 _Figure 7: Customer details view showing comprehensive information about a selected customer_
 
 ### 8. Form Validation
 
 The forms implement validation to ensure data quality and completeness.
 
-![Form Validation](../screenshots/form_validation.png)
+![Form Validation](./screenshots/form_validation.png)
 _Figure 8: Form validation in action showing error messages for invalid inputs_
 
 ### 9. Customer Record Creation - API Response
 
 The backend successfully processes customer creation requests and returns confirmation.
 
-![Create Customer API](../screenshots/post_request.png)
+![Create Customer API](./screenshots/post_request.png)
 _Figure 9: API response after successful customer record creation_
 
 ### 10. Customer Record Retrieval - API Response
 
 The API correctly returns customer data when requested.
 
-![Get Customer API](../screenshots/get_by_id_request.png)
+![Get Customer API](./screenshots/get_by_id_request.png)
 _Figure 10: API response showing customer details retrieval_
 
 ### 11. Customer Record Update - API Response
 
 Changes to customer records are properly processed and stored.
 
-![Update Customer API](../screenshots/put_request.png)
+![Update Customer API](./screenshots/put_request.png)
 _Figure 11: API response after customer record update_
 
 ### 12. Customer Record Deletion - API Response
 
 The system successfully processes deletion requests.
 
-![Delete Customer API](../screenshots/delete_request.png)
+![Delete Customer API](./screenshots/delete_request.png)
 _Figure 12: API confirmation after customer record deletion_
 
 ### 13. Deletion Verification - API Response
 
 After deletion, the customer record no longer appears in the database.
 
-![Verify Deletion API](../screenshots/verify_delete_request.png)
+![Verify Deletion API](./screenshots/verify_delete_request.png)
 _Figure 13: API response confirming customer record has been removed_
 
 ## Conclusion
