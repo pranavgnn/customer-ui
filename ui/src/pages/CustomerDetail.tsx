@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import { Loader2, AlertCircle, ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { Button } from "../components/ui";
 import Toast from "../components/Toast";
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 interface CustomerDetailProps {
   customer?: Customer;
@@ -389,39 +390,6 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Delete confirmation dialog */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl animate-fadeIn">
-            <h3 className="text-lg font-medium text-neutral-900 mb-2">
-              Delete Customer
-            </h3>
-            <p className="text-neutral-600 mb-6">
-              Are you sure you want to delete {fullName}? This action cannot be
-              undone.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <Button
-                variant="secondary"
-                className="flex items-center"
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={deletingCustomer}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="danger"
-                className="flex items-center gap-1.5"
-                onClick={handleDeleteCustomer}
-                isLoading={deletingCustomer}
-              >
-                {deletingCustomer ? "Deleting..." : "Delete"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 
@@ -438,6 +406,15 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
           onClose={() => setToast(null)}
         />
       )}
+
+      <DeleteConfirmationModal
+        title="Delete Customer"
+        message={`Are you sure you want to delete ${fullName}? This action cannot be undone.`}
+        isOpen={showDeleteConfirm}
+        isDeleting={deletingCustomer}
+        onConfirm={handleDeleteCustomer}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
 
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
