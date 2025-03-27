@@ -4,6 +4,7 @@ import { CustomerApi } from "../services/api";
 import { Customer } from "../types";
 import Layout from "../components/Layout";
 import { Table, Card, Button } from "../components/ui";
+import Pagination from "../components/ui/Pagination";
 import {
   Loader2,
   AlertCircle,
@@ -19,12 +20,19 @@ const CustomerList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const [page, setPage] = useState(0);
+  const [size] = useState(30);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        const data = await CustomerApi.getAll();
-        setCustomers(data);
+        const paginatedData = await CustomerApi.getPaginated(page, size);
+        setCustomers(paginatedData.content);
+        setTotalPages(paginatedData.totalPages);
+        setTotalElements(paginatedData.totalElements);
       } catch (err) {
         setError("Failed to load customers");
       } finally {
@@ -33,7 +41,11 @@ const CustomerList: React.FC = () => {
     };
 
     fetchCustomers();
-  }, []);
+  }, [page, size]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   if (loading) {
     return (
@@ -82,26 +94,13 @@ const CustomerList: React.FC = () => {
     );
   }
 
-  // Format date helper function
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    try {
-      return new Date(dateString).toLocaleDateString();
-    } catch (error) {
-      return "Invalid Date";
-    }
-  };
-
   const columns = [
     {
       header: "Name",
       accessor: (customer: Customer) => {
         const firstName = customer.name?.firstName || "Unknown";
-        const middleName = customer.name?.middleName || "";
         const lastName = customer.name?.lastName || "";
-        const displayName = [firstName, middleName, lastName]
-          .filter(Boolean)
-          .join(" ");
+        const displayName = [firstName, lastName].filter(Boolean).join(" ");
 
         return (
           <div className="flex items-center">
@@ -118,30 +117,22 @@ const CustomerList: React.FC = () => {
       },
     },
     {
-      header: "Customer ID",
-      accessor: (customer: Customer) => `#${customer.id}`,
-    },
-    {
-      header: "Date of Birth",
-      accessor: (customer: Customer) => formatDate(customer.dateOfBirth),
+      header: "ID",
+      accessor: (customer: Customer) => customer.id,
+      className: "text-center",
     },
     {
       header: "Country",
       accessor: (customer: Customer) => customer.address?.country || "N/A",
     },
     {
-      header: "Contact",
-      accessor: (customer: Customer) =>
-        customer.contactDetails?.[0]?.value || "N/A",
-    },
-    {
       header: "",
       accessor: (customer: Customer) => (
         <Link
           to={`/customers/${customer.id}`}
-          className="text-primary-600 hover:text-primary-800 flex items-center"
+          className="text-primary-600 hover:text-primary-800 flex items-center justify-end"
         >
-          <span className="mr-1">View</span>
+          <span className="mr-1">Details</span>
           <ChevronRight className="w-4 h-4" />
         </Link>
       ),
@@ -197,6 +188,30 @@ const CustomerList: React.FC = () => {
           onRowClick={(customer) => navigate(`/customers/${customer.id}`)}
           emptyState={emptyState}
         />
+
+        {!loading && customers.length > 0 && (
+          <div className="border-t border-neutral-100 p-4">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="text-center sm:text-left text-sm text-neutral-500">
+                Showing{" "}
+                <span className="font-medium text-neutral-700">
+                  {customers.length}
+                </span>{" "}
+                of{" "}
+                <span className="font-medium text-neutral-700">
+                  {totalElements}
+                </span>{" "}
+                customers
+              </div>
+
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}// 
+              />
+            </div>
+          </div>
+        )}
       </Card>
     </Layout>
   );

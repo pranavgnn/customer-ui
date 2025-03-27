@@ -107,80 +107,68 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
     }
   };
 
-  if (loading) {
+  // Create safe customer object with defaults for all potentially null fields
+  const safeCustomer = customer
+    ? {
+        id: customer.id || 0,
+        name: {
+          firstName: customer.name?.firstName || "Unknown",
+          middleName: customer.name?.middleName || "",
+          lastName: customer.name?.lastName || "",
+        },
+        dateOfBirth: customer.dateOfBirth || "",
+        gender: customer.gender || "Not specified",
+        language: customer.language || "",
+        address: {
+          addressLine1: customer.address?.addressLine1 || "No address provided",
+          addressLine2: customer.address?.addressLine2 || "",
+          city: customer.address?.city || "Unknown",
+          state: customer.address?.state || "Unknown",
+          country: customer.address?.country || "Unknown",
+          zipCode: customer.address?.zipCode || "Unknown",
+        },
+        contactDetails: customer.contactDetails?.length
+          ? customer.contactDetails
+          : [{ type: "Email", value: "No contact information provided" }],
+        identityProofs: customer.identityProofs?.length
+          ? customer.identityProofs
+          : [],
+      }
+    : null;
+
+  const fullName = safeCustomer
+    ? [
+        safeCustomer.name.firstName,
+        safeCustomer.name.middleName,
+        safeCustomer.name.lastName,
+      ]
+        .filter(Boolean)
+        .join(" ")
+    : "Unknown";
+
+  // Only render content if we have a valid customer
+  if (!safeCustomer) {
     return (
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="relative">
-            <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
+          <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg max-w-md">
+            <div className="flex items-center mb-3">
+              <AlertCircle className="w-6 h-6 text-red-500 mr-2" />
+              <h3 className="text-lg font-medium">Error</h3>
+            </div>
+            <p>Customer data is unavailable</p>
+            <Link
+              to="/customers"
+              className="mt-4 inline-flex items-center px-4 py-2 bg-white border border-red-300 text-red-700 rounded transition-colors hover:bg-red-50"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to All Customers
+            </Link>
           </div>
         </div>
       </Layout>
     );
   }
-
-  if (error || !customer) {
-    return (
-      <Layout>
-        <div className="mb-6">
-          <Link
-            to="/customers"
-            className="flex items-center text-primary-600 hover:text-primary-700 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to All Customers
-          </Link>
-        </div>
-        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg max-w-md mx-auto">
-          <div className="flex items-center mb-3">
-            <AlertCircle className="w-6 h-6 text-red-500 mr-2" />
-            <h3 className="text-lg font-medium">Error</h3>
-          </div>
-          <p>{error || "Customer not found"}</p>
-          <Link
-            to="/customers"
-            className="mt-4 inline-flex items-center px-4 py-2 bg-white border border-red-300 text-red-700 rounded transition-colors hover:bg-red-50"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to All Customers
-          </Link>
-        </div>
-      </Layout>
-    );
-  }
-
-  // Create safe customer object with defaults for all potentially null fields
-  const safeCustomer = {
-    id: customer.id || 0,
-    name: {
-      firstName: customer.name?.firstName || "Unknown",
-      middleName: customer.name?.middleName || "",
-      lastName: customer.name?.lastName || "",
-    },
-    dateOfBirth: customer.dateOfBirth || "",
-    address: {
-      addressLine1: customer.address?.addressLine1 || "No address provided",
-      addressLine2: customer.address?.addressLine2 || "",
-      city: customer.address?.city || "Unknown",
-      state: customer.address?.state || "Unknown",
-      country: customer.address?.country || "Unknown",
-      zipCode: customer.address?.zipCode || "Unknown",
-    },
-    contactDetails: customer.contactDetails?.length
-      ? customer.contactDetails
-      : [{ type: "Email", value: "No contact information provided" }],
-    identityProofs: customer.identityProofs?.length
-      ? customer.identityProofs
-      : [],
-  };
-
-  const fullName = [
-    safeCustomer.name.firstName,
-    safeCustomer.name.middleName,
-    safeCustomer.name.lastName,
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   const CustomerDetailsContent = () => (
     <div className={`card ${containerClassName}`}>
@@ -236,6 +224,19 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
                 <div className="mb-3">
                   <p className="text-xs text-neutral-500">Full Name</p>
                   <p className="font-medium text-neutral-800">{fullName}</p>
+                </div>
+                <div className="mb-3">
+                  <p className="text-xs text-neutral-500">Gender</p>
+                  <p className="font-medium text-neutral-800">
+                    {safeCustomer.gender.charAt(0).toUpperCase() +
+                      safeCustomer.gender.slice(1)}
+                  </p>
+                </div>
+                <div className="mb-3">
+                  <p className="text-xs text-neutral-500">Preferred Language</p>
+                  <p className="font-medium text-neutral-800">
+                    {safeCustomer.language}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-neutral-500">Date of Birth</p>
@@ -392,6 +393,48 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="relative">
+            <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !customer) {
+    return (
+      <Layout>
+        <div className="mb-6">
+          <Link
+            to="/customers"
+            className="flex items-center text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to All Customers
+          </Link>
+        </div>
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg max-w-md mx-auto">
+          <div className="flex items-center mb-3">
+            <AlertCircle className="w-6 h-6 text-red-500 mr-2" />
+            <h3 className="text-lg font-medium">Error</h3>
+          </div>
+          <p>{error || "Customer not found"}</p>
+          <Link
+            to="/customers"
+            className="mt-4 inline-flex items-center px-4 py-2 bg-white border border-red-300 text-red-700 rounded transition-colors hover:bg-red-50"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to All Customers
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
 
   if (isPreview) {
     return <CustomerDetailsContent />;

@@ -11,6 +11,10 @@ public class CustomerDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String gender;
+
+	private String language;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private CustomerName name;
 
@@ -31,6 +35,22 @@ public class CustomerDetails {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public CustomerName getName() {

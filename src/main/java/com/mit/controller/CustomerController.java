@@ -4,21 +4,48 @@ import com.mit.entity.CustomerDetails;
 import com.mit.service.CustomerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
 
 	@GetMapping
-	public List<CustomerDetails> getAllCustomers() {
-		return customerService.getAllCustomers();
+	public ResponseEntity<Page<CustomerDetails>> getAllCustomersPaginated(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "id,asc") String[] sort) {
+
+		List<Sort.Order> orders = new ArrayList<>();
+
+		if (sort[0].contains(",")) {
+			// sort=[field,direction]
+			for (String sortOrder : sort) {
+				String[] _sort = sortOrder.split(",");
+				orders.add(new Sort.Order(
+						_sort[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC,
+						_sort[0]));
+			}
+		} else {
+			// sort=[field,field,...]
+			orders.add(new Sort.Order(Sort.Direction.ASC, sort[0]));
+		}
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
+
+		return ResponseEntity.ok(customerService.getAllCustomersPaginated(pageable));
 	}
 
 	@GetMapping("/{id}")

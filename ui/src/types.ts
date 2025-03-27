@@ -28,6 +28,8 @@ export interface CustomerIdentityProof {
 
 export interface Customer {
   id: number;
+  gender: string;
+  language: string;
   name: CustomerName;
   dateOfBirth: string;
   contactDetails: CustomerContactDetails[];
@@ -38,6 +40,8 @@ export interface Customer {
 export interface CustomerFormData {
   currentStep: number;
   name: CustomerName;
+  gender: string;
+  language: string;
   dateOfBirth: string;
   address: CustomerAddress;
   contactDetails: CustomerContactDetails[];

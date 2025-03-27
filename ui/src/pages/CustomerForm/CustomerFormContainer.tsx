@@ -21,6 +21,8 @@ const CustomerFormContainer: React.FC = () => {
   const [formData, setFormData] = useState<CustomerFormData>({
     currentStep: 1,
     name: { firstName: "", middleName: "", lastName: "" },
+    gender: "",
+    language: "",
     dateOfBirth: "",
     address: {
       addressLine1: "",
@@ -30,7 +32,7 @@ const CustomerFormContainer: React.FC = () => {
       country: "",
       zipCode: "",
     },
-    contactDetails: [{ type: "Email", value: "" }], // Email doesn't need dialCode by default
+    contactDetails: [{ type: "Email", value: "" }],
     identityProofs: [
       { type: "Passport", value: "", issuedDate: "", expiryDate: "" },
     ],
@@ -54,7 +56,6 @@ const CustomerFormContainer: React.FC = () => {
           const customerId = parseInt(id, 10);
 
           if (isNaN(customerId) || customerId <= 0) {
-            // Redirect to 404 page for invalid ID format
             navigate("/404", { replace: true });
             return;
           }
@@ -62,15 +63,15 @@ const CustomerFormContainer: React.FC = () => {
           const customerData = await CustomerApi.getById(customerId);
 
           if (!customerData) {
-            // Redirect to 404 if customer not found
             navigate("/404", { replace: true });
             return;
           }
 
-          // Convert to form data format
           setFormData((prev) => ({
             ...prev,
             name: customerData.name,
+            gender: customerData.gender,
+            language: customerData.language,
             dateOfBirth: customerData.dateOfBirth,
             address: customerData.address,
             contactDetails: customerData.contactDetails,
